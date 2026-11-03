@@ -4,6 +4,7 @@
 **Student ID:** 24K-5541  
 **Section:** BSFT-5B  
 **Instructor:** Syed Waqar Ali  
+**Project Repo:** [BlackSwanWallet](https://github.com/24K-5541-Ayan-Ahmed/BlackSwanWallet)  
 **Currency:** BSWAN
 
 ## Overview
