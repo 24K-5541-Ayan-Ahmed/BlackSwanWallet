@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Basic Icons -->
+        <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
+        <!-- Filled Icons -->
+        <link href="https://cdn.boxicons.com/3.0.8/fonts/filled/boxicons-filled.min.css" rel="stylesheet">
+        <!-- Brand Icons -->
+        <link href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/style.css">
+        <title>BlackSwan | 24K-5541</title>
+    </head>
+    <body>
+        <div class="accounts-container">
+            <div class="account">
+                <div class="account-name" title="Account name">Ayan Ahmed</div>
+                <div class="account-address" title="Account address">1Lfvu6zPASLCp3zukUNNQSaHsCxSVt6Vab</div>
+                <div class="account-actions">
+                    <button class="account-balance" title="Show account balance">
+                        <i class="bx bx-eye"></i> 
+                        Show Balance
+                    </button>
+                    <button class="account-copy" title="Copy account address">
+                        <i class="bx bx-copy"></i> 
+                        Copy Address
+                    </button>
+                </div>
+            </div>
+            <div class="account">
+                <div class="account-name" title="Account name">24K-5541</div>
+                <div class="account-address" title="Account address">1M5aYQ8QN1oNwm7AGALtmTe8LE2zKMe2qq</div>
+                <div class="account-actions">
+                    <button class="account-balance" title="Show account balance">
+                        <i class="bx bx-eye"></i> 
+                        Show Balance
+                    </button>
+                    <button class="account-copy" title="Copy account address">
+                        <i class="bx bx-copy"></i> 
+                        Copy Address
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="wallet-container">
+        
+            <h1> Transfer BlackSwan </h1>
+            
+            <form action="#" id = "form" method="post">
+                <label for="from">From Address:</label>
+                <input type="text" id="from" name="fromAddress" value="1Lfvu6zPASLCp3zukUNNQSaHsCxSVt6Vab">
+                <label for="to">To Address:</label>
+                <input type="text" id="to" name="toAddress" value="1M5aYQ8QN1oNwm7AGALtmTe8LE2zKMe2qq">
+                <label for="amount">Amount (BSWAN):</label>
+                <input type="number" id="amount" name="Amount" >
+                {% if message %}
+                <span class="message"> {{ message }} </span>
+                {% endif %}
+                <button type="submit">
+                    <i class="bx bx-paper-plane" aria-hidden="true"></i>
+                    Send
+                </button>
+            </form>
+        </div>
+
+        <script>
+            document.querySelectorAll(".account").forEach(account => {
+                const address = account
+                    .querySelector(".account-address")
+                    .textContent.trim();
+
+                const copyButton = account.querySelector(".account-copy");
+                const balanceButton = account.querySelector(".account-balance");
+
+                copyButton.type = "button";
+                balanceButton.type = "button";
+
+                copyButton.addEventListener("click", async () => {
+                    try {
+                        await navigator.clipboard.writeText(address);
+
+                        const original = copyButton.innerHTML;
+                        copyButton.textContent = "Copied!";
+
+                        setTimeout(() => {
+                            copyButton.innerHTML = original;
+                        }, 1500);
+                    } catch {
+                        alert("Could not copy the address. Please copy it manually.");
+                    }
+                });
+
+                balanceButton.addEventListener("click", async () => {
+                    const original = balanceButton.innerHTML;
+
+                    balanceButton.disabled = true;
+                    balanceButton.textContent = "Loading...";
+
+                    try {
+                        const response = await fetch(
+                            `/api/balance/${encodeURIComponent(address)}`
+                        );
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.error || "Could not load balance.");
+                        }
+
+                        balanceButton.textContent = `${data.balance} BSWAN`;
+                    } catch (error) {
+                        balanceButton.innerHTML = original;
+                        alert(error.message);
+                    } finally {
+                        balanceButton.disabled = false;
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
